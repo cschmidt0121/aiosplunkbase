@@ -82,13 +82,17 @@ class SBClient:
         else:
             raise ApiException(response)
 
-    async def get_app_info(self, app_name: str) -> dict[str, Any] | None:
+    async def get_app_info(self, app: int | str) -> dict[str, Any] | None:
         """
         Get app info for an given app ID (non-numeric).
         """
-        app_id = await self.get_app_numeric_id(app_name)
-        if app_id is None:
-            return None
+        if isinstance(app, str):
+            app_id = await self.get_app_numeric_id(app)
+            if app_id is None:
+                return None
+        else:
+            app_id = app
+
 
         try:
             response = await self.request(
@@ -103,12 +107,12 @@ class SBClient:
         return response.json()
 
     async def get_app_latest_version(
-        self, app_name: str, splunk_version: str, is_cloud: bool | None = None
+        self, app: str | int, splunk_version: str, is_cloud: bool | None = None
     ) -> dict[str, Any]:
         """
         Given a list of Splunk versions, find the latest compatible app version.
         """
-        app_info = await self.get_app_info(app_name)
+        app_info = await self.get_app_info(app)
         if app_info is None:
             raise AppNotFound
 
@@ -156,13 +160,13 @@ class SBClient:
         return False
 
     async def download_app(
-        self, app_name: str, app_version: str | None = None
+        self, app: str | int, app_version: str | None = None
     ) -> AsyncGenerator[bytes, None]:
         """
         Download an app from Splunkbase. If no app_version is provided, the latest
         release will be downloaded.
         """
-        data = await self.get_app_info(app_name)
+        data = await self.get_app_info(app)
 
         if data is None:
             raise AppNotFound
@@ -197,11 +201,11 @@ class SBClient:
             async for chunk in r.aiter_bytes():
                 yield chunk
 
-    async def get_app_supported_versions(self, app_name: str) -> list[str]:
+    async def get_app_supported_versions(self, app: str | int) -> list[str]:
         """
         Get a list of all supported Splunk versions for an app.
         """
-        app_info = await self.get_app_info(app_name)
+        app_info = await self.get_app_info(app)
         if app_info is None:
             raise AppNotFound
 
