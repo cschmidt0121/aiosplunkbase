@@ -83,7 +83,9 @@ class SBClient:
             raise ApiException(response)
 
     async def get_app_info(self, app_name: str) -> dict[str, Any] | None:
-        """Get app info for an given app ID (non-numeric)"""
+        """
+        Get app info for an given app ID (non-numeric).
+        """
         app_id = await self.get_app_numeric_id(app_name)
         if app_id is None:
             return None
@@ -103,7 +105,9 @@ class SBClient:
     async def get_app_latest_version(
         self, app_name: str, splunk_version: str, is_cloud: bool | None = None
     ) -> dict[str, Any]:
-        """Given a list of Splunk versions, find the latest compatible app version"""
+        """
+        Given a list of Splunk versions, find the latest compatible app version.
+        """
         app_info = await self.get_app_info(app_name)
         if app_info is None:
             raise AppNotFound
@@ -136,6 +140,9 @@ class SBClient:
         splunk_version: str,
         is_cloud: bool | None = None,
     ) -> bool:
+        """
+        Check if a release is compatible with a given Splunk version.
+        """
         if (
             is_cloud
             and "Splunk Cloud" not in potential_release["product_compatibility"]
@@ -151,7 +158,10 @@ class SBClient:
     async def download_app(
         self, app_name: str, app_version: str | None = None
     ) -> AsyncGenerator[bytes, None]:
-        """Download an app from Splunkbase"""
+        """
+        Download an app from Splunkbase. If no app_version is provided, the latest
+        release will be downloaded.
+        """
         data = await self.get_app_info(app_name)
 
         if data is None:
@@ -188,7 +198,9 @@ class SBClient:
                 yield chunk
 
     async def get_app_supported_versions(self, app_name: str) -> list[str]:
-        """Get a list of all supported Splunk versions for an app"""
+        """
+        Get a list of all supported Splunk versions for an app.
+        """
         app_info = await self.get_app_info(app_name)
         if app_info is None:
             raise AppNotFound
