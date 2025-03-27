@@ -10,12 +10,6 @@ You can install aiosplunkbase using pip:
 pip install aiosplunkbase
 ```
 
-## Features
-
-- Asynchronous API client for Splunkbase
-- App information retrieval (releases, Splunk version compatibility, etc)
-- App downloading
-
 ## Usage Examples
 
 ### Usage
