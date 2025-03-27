@@ -16,8 +16,10 @@ class ApiException(Exception):
 class AppNotFound(Exception):
     pass
 
+
 class AuthenticationError(ApiException):
     pass
+
 
 class NoReleaseFound(Exception):
     pass

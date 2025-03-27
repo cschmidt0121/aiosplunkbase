@@ -63,6 +63,20 @@ class SBClient:
         response = await self.httpx_client.request(*args, **kwargs)
         return response
 
+    async def search(
+        self, query: str, limit: int = 18, product: str = "splunk"
+    ) -> dict[str, Any]:
+        params = {
+            "query": query,
+            "limit": limit,
+            "product": product,
+            "product_types": "enterprise",
+            "order": "relevance",
+            "include": "display_author,icon,categories,support,rating",
+        }
+        response = await self.request("GET", "/api/v2/apps", params=params)
+        return response.json()
+
     async def get_app_numeric_id(self, app_name: str) -> str | None:
         """
         This is the only known reliable way to resolve an app name to an ID. Splunkbase
@@ -92,7 +106,6 @@ class SBClient:
                 return None
         else:
             app_id = app
-
 
         try:
             response = await self.request(
