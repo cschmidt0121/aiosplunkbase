@@ -31,7 +31,7 @@ async def main():
         # Get latest compatible release for specific Splunk version
         latest_version = await client.get_app_latest_version(
             "Splunk_TA_aws",
-            splunk_version="9.0.0",
+            splunk_version="9.1",
             is_cloud=False
         )
         pprint(latest_version)
