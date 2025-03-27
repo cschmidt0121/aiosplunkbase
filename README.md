@@ -19,16 +19,12 @@ from aiosplunkbase import SBClient
 from pprint import pprint
 
 async def main():
-    # Initialize the client
     async with SBClient(username="your_username", password="your_password") as client:
-        # Login to Splunkbase
         await client.login()
-        
-        # Get app information
+
         app_info = await client.get_app_info("Splunk_TA_aws")
         pprint(app_info)
 
-        # Get latest compatible release for specific Splunk version
         latest_version = await client.get_app_latest_version(
             "Splunk_TA_aws",
             splunk_version="9.1",
@@ -36,9 +32,7 @@ async def main():
         )
         pprint(latest_version)
 
-        # Download an app
         async for chunk in client.download_app("Splunk_TA_aws"):
-            # Process chunks as needed
             pass
 ```
 
